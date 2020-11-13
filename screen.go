@@ -20,8 +20,10 @@ func StartScreen() {
 		log.Fatalf("%+v", err)
 	}
 
-	defStyle := tcell.StyleDefault.Background(tcell.ColorBlue).Foreground(tcell.ColorReset)
-	screen.SetStyle(defStyle)
+	style := tcell.StyleDefault.
+		Background(tcell.ColorBlue).
+		Foreground(tcell.ColorReset)
+	screen.SetStyle(style)
 
 	screen.Clear()
 }

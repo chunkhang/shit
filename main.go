@@ -13,12 +13,9 @@ func main() {
 	log.SetOutput(file)
 	defer file.Close()
 
-	log.Println("ui start")
 	StartScreen()
 
-	log.Println("engine start")
 	StartEngine()
 
-	log.Println("ui stop")
 	StopScreen()
 }
