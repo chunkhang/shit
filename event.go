@@ -14,14 +14,13 @@ func HandleResize() {
 
 // HandleKey handles the key press event
 func HandleKey() {
-loop:
 	for {
 		event := <-channel.key
 		switch event.Key() {
 		case tcell.KeyEscape:
-			break loop
+			channel.quit <- true
 		case tcell.KeyCtrlC:
-			break loop
+			channel.quit <- true
 		case tcell.KeyRune:
 			switch event.Rune() {
 			case 'b':
@@ -40,10 +39,9 @@ loop:
 				screen.SetStyle(style)
 				screen.Clear()
 			case 'q':
-				break loop
+				channel.quit <- true
 			}
 		}
 		screen.Show()
 	}
-	channel.quit <- true
 }
