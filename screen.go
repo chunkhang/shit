@@ -8,7 +8,8 @@ import (
 
 var screen tcell.Screen
 
-func startScreen() {
+// StartScreen sets up the screen for the application
+func StartScreen() {
 	s, err := tcell.NewScreen()
 	if err != nil {
 		log.Fatalf("%+v", err)
@@ -20,6 +21,10 @@ func startScreen() {
 		log.Fatalf("%+v", err)
 	}
 
+	initScreen()
+}
+
+func initScreen() {
 	style := tcell.StyleDefault.
 		Background(tcell.ColorBlue).
 		Foreground(tcell.ColorReset)
@@ -28,6 +33,7 @@ func startScreen() {
 	screen.Clear()
 }
 
-func stopScreen() {
+// StopScreen cleans up the screen to return control to the terminal
+func StopScreen() {
 	screen.Fini()
 }

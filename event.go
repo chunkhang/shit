@@ -6,7 +6,8 @@ import (
 	"github.com/gdamore/tcell/v2"
 )
 
-func handleResize() {
+// HandleResize handles the terminal resize event
+func HandleResize() {
 	for {
 		event := <-channel.resize
 		width, height := event.Size()
@@ -15,7 +16,8 @@ func handleResize() {
 	}
 }
 
-func handleKey() {
+// HandleKey handles the key press event
+func HandleKey() {
 loop:
 	for {
 		event := <-channel.key

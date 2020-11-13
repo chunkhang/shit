@@ -4,8 +4,10 @@ import (
 	"github.com/gdamore/tcell/v2"
 )
 
-func startEngine() {
-	// Event loop
+// StartEngine starts the event loop for the application
+// All event handlers are registered as well
+// The engine will stop after receiving the quit signal
+func StartEngine() {
 	go func() {
 		for {
 			event := screen.PollEvent()
@@ -18,10 +20,8 @@ func startEngine() {
 		}
 	}()
 
-	// Handle events
-	go handleResize()
-	go handleKey()
+	go HandleResize()
+	go HandleKey()
 
-	// Stop engine upon receiving quit signal
 	<-channel.quit
 }
