@@ -13,9 +13,9 @@ func main() {
 	log.SetOutput(file)
 	defer file.Close()
 
-	StartScreen()
+	startScreen()
 
-	StartEngine()
+	startEngine()
 
-	StopScreen()
+	stopScreen()
 }

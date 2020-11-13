@@ -8,7 +8,7 @@ import (
 
 var screen tcell.Screen
 
-func StartScreen() {
+func startScreen() {
 	s, err := tcell.NewScreen()
 	if err != nil {
 		log.Fatalf("%+v", err)
@@ -28,6 +28,6 @@ func StartScreen() {
 	screen.Clear()
 }
 
-func StopScreen() {
+func stopScreen() {
 	screen.Fini()
 }

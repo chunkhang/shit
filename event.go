@@ -6,21 +6,20 @@ import (
 	"github.com/gdamore/tcell/v2"
 )
 
-func handleResize(resizeEventChan chan *tcell.EventResize) {
+func handleResize() {
 	for {
-		event := <-resizeEventChan
+		event := <-channel.resize
 		width, height := event.Size()
 		log.Printf("width, height = %+v, %+v\n", width, height)
 		screen.Sync()
 	}
 }
 
-func handleKey(keyEventChan chan *tcell.EventKey, quitChan chan bool) {
+func handleKey() {
 loop:
 	for {
-		event := <-keyEventChan
+		event := <-channel.key
 		log.Printf("event.Name() = %+v\n", event.Name())
-
 		switch event.Key() {
 		case tcell.KeyEscape:
 			break loop
@@ -49,5 +48,5 @@ loop:
 		}
 		screen.Show()
 	}
-	quitChan <- true
+	channel.quit <- true
 }

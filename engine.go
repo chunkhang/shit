@@ -4,28 +4,24 @@ import (
 	"github.com/gdamore/tcell/v2"
 )
 
-func StartEngine() {
-	resizeEventChan := make(chan *tcell.EventResize)
-	keyEventChan := make(chan *tcell.EventKey)
-	quitChan := make(chan bool)
-
-	go startEventLoop(resizeEventChan, keyEventChan)
-
-	go handleResize(resizeEventChan)
-	go handleKey(keyEventChan, quitChan)
-
-	<-quitChan
-}
-
-func startEventLoop(resizeEventChan chan *tcell.EventResize, keyEventChan chan *tcell.EventKey) {
-	for {
-		event := screen.PollEvent()
-
-		switch event := event.(type) {
-		case *tcell.EventResize:
-			resizeEventChan <- event
-		case *tcell.EventKey:
-			keyEventChan <- event
+func startEngine() {
+	// Event loop
+	go func() {
+		for {
+			event := screen.PollEvent()
+			switch event := event.(type) {
+			case *tcell.EventResize:
+				channel.resize <- event
+			case *tcell.EventKey:
+				channel.key <- event
+			}
 		}
-	}
+	}()
+
+	// Handle events
+	go handleResize()
+	go handleKey()
+
+	// Stop engine upon receiving quit signal
+	<-channel.quit
 }
