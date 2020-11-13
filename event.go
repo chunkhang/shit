@@ -1,17 +1,13 @@
 package main
 
 import (
-	"log"
-
 	"github.com/gdamore/tcell/v2"
 )
 
 // HandleResize handles the terminal resize event
 func HandleResize() {
 	for {
-		event := <-channel.resize
-		width, height := event.Size()
-		log.Printf("width, height = %+v, %+v\n", width, height)
+		<-channel.resize
 		screen.Sync()
 	}
 }
@@ -21,7 +17,6 @@ func HandleKey() {
 loop:
 	for {
 		event := <-channel.key
-		log.Printf("event.Name() = %+v\n", event.Name())
 		switch event.Key() {
 		case tcell.KeyEscape:
 			break loop
