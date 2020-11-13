@@ -1,27 +1,26 @@
 package main
 
 import (
-	"log"
-
 	"github.com/gdamore/tcell/v2"
 )
 
 var screen tcell.Screen
 
 // StartScreen sets up the screen for the application
-func StartScreen() {
-	s, err := tcell.NewScreen()
+func StartScreen() (err error) {
+	screen, err = tcell.NewScreen()
 	if err != nil {
-		log.Fatalf("%+v", err)
+		return
 	}
-	screen = s
 
 	err = screen.Init()
 	if err != nil {
-		log.Fatalf("%+v", err)
+		return
 	}
 
 	initScreen()
+
+	return
 }
 
 func initScreen() {

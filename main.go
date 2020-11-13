@@ -2,20 +2,22 @@ package main
 
 import (
 	"log"
-	"os"
 )
 
 func main() {
-	file, err := os.OpenFile("xr.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
-	if err != nil {
-		log.Fatalf("%+v", err)
-	}
-	log.SetOutput(file)
-	defer file.Close()
+	err := StartLog()
+	checkErr(err)
+	defer StopLog()
 
-	StartScreen()
+	err = StartScreen()
+	checkErr(err)
+	defer StopScreen()
 
 	StartEngine()
+}
 
-	StopScreen()
+func checkErr(err error) {
+	if err != nil {
+		log.Fatalf("%v", err.Error())
+	}
 }
