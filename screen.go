@@ -18,18 +18,20 @@ func StartScreen() (err error) {
 		return
 	}
 
-	initScreen()
+	reset := tcell.ColorReset
+	style := tcell.StyleDefault.Background(reset).Foreground(reset)
+	screen.SetStyle(style)
+
+	screen.Clear()
 
 	return
 }
 
-func initScreen() {
-	style := tcell.StyleDefault.
-		Background(tcell.ColorBlue).
-		Foreground(tcell.ColorReset)
-	screen.SetStyle(style)
-
-	screen.Clear()
+// RefreshScreen redraws the screen with the latest application state
+func RefreshScreen() {
+	DrawHeader()
+	DrawFooter()
+	screen.Show()
 }
 
 // StopScreen cleans up the screen to return control to the terminal
