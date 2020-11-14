@@ -69,7 +69,9 @@ func DrawBody() {
 					bg = light
 				}
 			}
-			drawBox(&Box{x: x, y: y, w: colWidth, h: 1, bg: bg})
+			pos := &Pos{row: y - 1, col: n}
+			box := &Box{x: x, y: y, w: colWidth, h: 1, bg: bg, fg: tcell.ColorRed, text: grid.getValue(pos)}
+			drawBox(box)
 			x += colWidth
 		}
 	}
