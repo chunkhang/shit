@@ -30,6 +30,7 @@ func StartScreen() (err error) {
 // RefreshScreen redraws the screen with the latest application state
 func RefreshScreen() {
 	DrawHeader()
+	DrawBody()
 	DrawFooter()
 	screen.Show()
 }

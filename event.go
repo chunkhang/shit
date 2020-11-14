@@ -11,6 +11,7 @@ func HandleResize() {
 		width, height := event.Size()
 		term.w = width
 		term.h = height
+		screen.Clear()
 		RefreshScreen()
 	}
 }

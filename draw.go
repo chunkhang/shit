@@ -29,7 +29,6 @@ type Box struct {
 	text string
 }
 
-// drawBox draws a box with text on the screen
 func drawBox(box *Box) {
 	i := 0
 	chars := []rune(box.text)
@@ -48,6 +47,32 @@ func drawBox(box *Box) {
 // DrawHeader draws the header for the application
 func DrawHeader() {
 	drawBox(&Box{x: 0, y: 0, w: term.w, h: 1, bg: tcell.ColorBlue})
+}
+
+// DrawBody draws the body for the application
+func DrawBody() {
+	colWidth := 12
+	numCols := term.w / colWidth
+	light := tcell.ColorWhite
+	dark := tcell.ColorBlack
+	for y := 1; y < term.h-1; y++ {
+		x := 0
+		for n := 0; n < numCols; n++ {
+			bg := light
+			if y%2 == 0 {
+				bg = dark
+			}
+			if n%2 == 0 {
+				if bg == light {
+					bg = dark
+				} else {
+					bg = light
+				}
+			}
+			drawBox(&Box{x: x, y: y, w: colWidth, h: 1, bg: bg})
+			x += colWidth
+		}
+	}
 }
 
 // DrawFooter draws the footer for the application
