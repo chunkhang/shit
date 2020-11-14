@@ -14,16 +14,7 @@ type Grid struct {
 }
 
 var grid = &Grid{
-	cells: map[int]map[int]string{
-		0: map[int]string{
-			0: "hello",
-			2: "world",
-		},
-		4: map[int]string{
-			3: "here",
-			4: "!",
-		},
-	},
+	cells: map[int]map[int]string{},
 }
 
 func (g *Grid) hasValue(pos *Pos) bool {
@@ -31,8 +22,8 @@ func (g *Grid) hasValue(pos *Pos) bool {
 	if !ok {
 		return false
 	}
-	_, ok = row[pos.col]
-	return ok
+	value, ok := row[pos.col]
+	return ok && value != ""
 }
 
 func (g *Grid) getValue(pos *Pos) string {
@@ -41,4 +32,12 @@ func (g *Grid) getValue(pos *Pos) string {
 	}
 	value, _ := g.cells[pos.row][pos.col]
 	return value
+}
+
+func (g *Grid) setValue(pos *Pos, value string) {
+	_, ok := g.cells[pos.row]
+	if !ok {
+		g.cells[pos.row] = map[int]string{}
+	}
+	g.cells[pos.row][pos.col] = value
 }

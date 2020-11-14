@@ -25,6 +25,25 @@ func HandleKey() {
 			channel.quit <- true
 		case tcell.KeyRune:
 			switch event.Rune() {
+			case 'j':
+				grid.row++
+			case 'k':
+				if grid.row > 0 {
+					grid.row--
+				}
+			case 'h':
+				if grid.col > 0 {
+					grid.col--
+				}
+			case 'l':
+				grid.col++
+			case ' ':
+				pos := &Pos{row: grid.row, col: grid.col}
+				if grid.hasValue(pos) {
+					grid.setValue(pos, "")
+				} else {
+					grid.setValue(pos, "*")
+				}
 			case 'q':
 				channel.quit <- true
 			}

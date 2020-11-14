@@ -69,7 +69,12 @@ func DrawBody() {
 					bg = light
 				}
 			}
-			pos := &Pos{row: y - 1, col: n}
+			row := y - 1
+			col := n
+			if row == grid.row && col == grid.col {
+				bg = tcell.ColorPurple
+			}
+			pos := &Pos{row: row, col: col}
 			box := &Box{x: x, y: y, w: colWidth, h: 1, bg: bg, fg: tcell.ColorRed, text: grid.getValue(pos)}
 			drawBox(box)
 			x += colWidth
