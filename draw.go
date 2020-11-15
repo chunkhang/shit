@@ -56,29 +56,39 @@ func DrawHeader() {
 func DrawBody() {
 	colWidth := 12
 	numCols := term.w / colWidth
-	light := tcell.ColorWhite
-	dark := tcell.ColorBlack
-	for y := 1; y < term.h-1; y++ {
+	// Row headings
+	for n := 1; n < numCols; n++ {
+		x := n * colWidth
+		col := n - 1
+		bg := tcell.ColorYellow
+		if col == grid.cursor.pos.col {
+			bg = tcell.ColorWhite
+		}
+		box := &Box{x: x, y: 1, w: colWidth, h: 1, bg: bg, fg: tcell.ColorBlack, text: fmt.Sprintf("%d", col)}
+		drawBox(box)
+	}
+	// Column headings
+	for y := 2; y < term.h-1; y++ {
+		row := y - 2
+		bg := tcell.ColorYellow
+		if row == grid.cursor.pos.row {
+			bg = tcell.ColorWhite
+		}
+		box := &Box{x: 0, y: y, w: colWidth, h: 1, bg: bg, fg: tcell.ColorBlack, text: fmt.Sprintf("%d", row)}
+		drawBox(box)
+	}
+	// Cells
+	for y := 2; y < term.h-1; y++ {
 		x := 0
-		for n := 0; n < numCols; n++ {
-			bg := light
-			if y%2 == 0 {
-				bg = dark
-			}
-			if n%2 == 0 {
-				if bg == light {
-					bg = dark
-				} else {
-					bg = light
-				}
-			}
-			row := y - 1
+		for n := 0; n < numCols-1; n++ {
+			var bg tcell.Color
+			row := y - 2
 			col := n
 			if row == grid.cursor.pos.row && col == grid.cursor.pos.col {
-				bg = tcell.ColorPurple
+				bg = tcell.ColorWhite
 			}
 			cell := grid.GetCell(&Pos{row: row, col: col})
-			box := &Box{x: x, y: y, w: colWidth, h: 1, bg: bg, fg: tcell.ColorYellow, text: cell.value}
+			box := &Box{x: x + colWidth, y: y, w: colWidth, h: 1, bg: bg, fg: tcell.ColorWhite, text: cell.value}
 			drawBox(box)
 			x += colWidth
 		}
