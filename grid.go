@@ -1,7 +1,6 @@
 package main
 
 import (
-	"errors"
 	"fmt"
 )
 
@@ -21,63 +20,33 @@ type Cell struct {
 	value string
 }
 
-// Cursor is the cell the cursor is on
-type Cursor struct {
-	*Cell
-}
-
-func (c *Cursor) moveDown() {
-	c.pos.row++
-}
-
-func (c *Cursor) moveUp() {
-	if c.pos.row == 0 {
-		return
-	}
-	c.pos.row--
-}
-
-func (c *Cursor) moveLeft() {
-	if c.pos.col == 0 {
-		return
-	}
-	c.pos.col--
-}
-
-func (c *Cursor) moveRight() {
-	c.pos.col++
-}
-
 // Grid holds the state of the cell grid
 type Grid struct {
 	cursor *Cursor
 	cells  map[int]map[int]*Cell
 }
 
-var (
-	grid = &Grid{
-		cursor: &Cursor{&Cell{pos: &Pos{row: 0, col: 0}}},
-		cells:  map[int]map[int]*Cell{},
-	}
-	errNotFound = errors.New("not found")
-)
+var grid = &Grid{}
 
-func (g *Grid) getCell(pos *Pos) (cell *Cell, err error) {
-	cellRow, ok := g.cells[pos.row]
-	if !ok {
-		return nil, errNotFound
-	}
-	cell, ok = cellRow[pos.col]
-	if !ok {
-		return nil, errNotFound
-	}
-	return
+func init() {
+	grid.cells = map[int]map[int]*Cell{}
+	grid.cursor = &Cursor{grid.GetCell(&Pos{row: 0, col: 0})}
 }
 
-func (g *Grid) setCell(cell *Cell) {
-	_, ok := g.cells[cell.pos.row]
+// GetCell retuns the cell at the position provided
+// The cell will be created if it is not present
+func (g *Grid) GetCell(pos *Pos) *Cell {
+	var cellRow map[int]*Cell
+	cellRow, ok := g.cells[pos.row]
 	if !ok {
-		g.cells[cell.pos.row] = map[int]*Cell{}
+		cellRow = map[int]*Cell{}
+		g.cells[pos.row] = cellRow
 	}
-	g.cells[cell.pos.row][cell.pos.col] = cell
+	var cell *Cell
+	cell, ok = cellRow[pos.col]
+	if !ok {
+		cell = &Cell{pos: pos}
+		cellRow[pos.col] = cell
+	}
+	return cell
 }

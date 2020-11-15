@@ -21,18 +21,32 @@ func HandleKey() {
 	for {
 		event := <-channel.key
 		switch event.Key() {
+		case tcell.KeyDown:
+			grid.cursor.MoveDown()
+		case tcell.KeyUp:
+			grid.cursor.MoveUp()
+		case tcell.KeyLeft:
+			grid.cursor.MoveLeft()
+		case tcell.KeyRight:
+			grid.cursor.MoveRight()
 		case tcell.KeyCtrlC:
 			quit()
 		case tcell.KeyRune:
 			switch event.Rune() {
 			case 'j':
-				grid.cursor.moveDown()
+				grid.cursor.MoveDown()
 			case 'k':
-				grid.cursor.moveUp()
+				grid.cursor.MoveUp()
 			case 'h':
-				grid.cursor.moveLeft()
+				grid.cursor.MoveLeft()
 			case 'l':
-				grid.cursor.moveRight()
+				grid.cursor.MoveRight()
+			case ' ':
+				if grid.cursor.value == "" {
+					grid.cursor.value = "*"
+				} else {
+					grid.cursor.value = ""
+				}
 			case 'q':
 				quit()
 			}
