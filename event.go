@@ -22,32 +22,25 @@ func HandleKey() {
 		event := <-channel.key
 		switch event.Key() {
 		case tcell.KeyCtrlC:
-			channel.quit <- true
+			quit()
 		case tcell.KeyRune:
 			switch event.Rune() {
 			case 'j':
-				grid.row++
+				grid.cursor.moveDown()
 			case 'k':
-				if grid.row > 0 {
-					grid.row--
-				}
+				grid.cursor.moveUp()
 			case 'h':
-				if grid.col > 0 {
-					grid.col--
-				}
+				grid.cursor.moveLeft()
 			case 'l':
-				grid.col++
-			case ' ':
-				pos := &Pos{row: grid.row, col: grid.col}
-				if grid.hasValue(pos) {
-					grid.setValue(pos, "")
-				} else {
-					grid.setValue(pos, "*")
-				}
+				grid.cursor.moveRight()
 			case 'q':
-				channel.quit <- true
+				quit()
 			}
 		}
 		RefreshScreen()
 	}
+}
+
+func quit() {
+	channel.quit <- true
 }

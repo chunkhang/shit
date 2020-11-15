@@ -1,43 +1,83 @@
 package main
 
+import (
+	"errors"
+	"fmt"
+)
+
 // Pos is the coordinate for a cell
 type Pos struct {
 	row int
 	col int
 }
 
+func (p *Pos) String() string {
+	return fmt.Sprintf("(%d, %d)", p.row, p.col)
+}
+
+// Cell holds the state of a cell
+type Cell struct {
+	pos   *Pos
+	value string
+}
+
+// Cursor is the cell the cursor is on
+type Cursor struct {
+	*Cell
+}
+
+func (c *Cursor) moveDown() {
+	c.pos.row++
+}
+
+func (c *Cursor) moveUp() {
+	if c.pos.row == 0 {
+		return
+	}
+	c.pos.row--
+}
+
+func (c *Cursor) moveLeft() {
+	if c.pos.col == 0 {
+		return
+	}
+	c.pos.col--
+}
+
+func (c *Cursor) moveRight() {
+	c.pos.col++
+}
+
 // Grid holds the state of the cell grid
 type Grid struct {
-	row   int // Current row
-	col   int // Current column
-	cells map[int]map[int]string
+	cursor *Cursor
+	cells  map[int]map[int]*Cell
 }
 
-var grid = &Grid{
-	cells: map[int]map[int]string{},
-}
+var (
+	grid = &Grid{
+		cursor: &Cursor{&Cell{pos: &Pos{row: 0, col: 0}}},
+		cells:  map[int]map[int]*Cell{},
+	}
+	errNotFound = errors.New("not found")
+)
 
-func (g *Grid) hasValue(pos *Pos) bool {
-	row, ok := g.cells[pos.row]
+func (g *Grid) getCell(pos *Pos) (cell *Cell, err error) {
+	cellRow, ok := g.cells[pos.row]
 	if !ok {
-		return false
+		return nil, errNotFound
 	}
-	value, ok := row[pos.col]
-	return ok && value != ""
-}
-
-func (g *Grid) getValue(pos *Pos) string {
-	if !g.hasValue(pos) {
-		return ""
-	}
-	value, _ := g.cells[pos.row][pos.col]
-	return value
-}
-
-func (g *Grid) setValue(pos *Pos, value string) {
-	_, ok := g.cells[pos.row]
+	cell, ok = cellRow[pos.col]
 	if !ok {
-		g.cells[pos.row] = map[int]string{}
+		return nil, errNotFound
 	}
-	g.cells[pos.row][pos.col] = value
+	return
+}
+
+func (g *Grid) setCell(cell *Cell) {
+	_, ok := g.cells[cell.pos.row]
+	if !ok {
+		g.cells[cell.pos.row] = map[int]*Cell{}
+	}
+	g.cells[cell.pos.row][cell.pos.col] = cell
 }

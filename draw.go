@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/gdamore/tcell/v2"
 )
 
@@ -46,7 +48,8 @@ func drawBox(box *Box) {
 
 // DrawHeader draws the header for the application
 func DrawHeader() {
-	drawBox(&Box{x: 0, y: 0, w: term.w, h: 1, bg: tcell.ColorBlue})
+	text := fmt.Sprintf("%s %s", grid.cursor.pos, grid.cursor.value)
+	drawBox(&Box{x: 0, y: 0, w: term.w, h: 1, bg: tcell.ColorBlue, fg: tcell.ColorWhite, text: text})
 }
 
 // DrawBody draws the body for the application
@@ -71,11 +74,14 @@ func DrawBody() {
 			}
 			row := y - 1
 			col := n
-			if row == grid.row && col == grid.col {
+			if row == grid.cursor.pos.row && col == grid.cursor.pos.col {
 				bg = tcell.ColorPurple
 			}
-			pos := &Pos{row: row, col: col}
-			box := &Box{x: x, y: y, w: colWidth, h: 1, bg: bg, fg: tcell.ColorRed, text: grid.getValue(pos)}
+			box := &Box{x: x, y: y, w: colWidth, h: 1, bg: bg, fg: tcell.ColorRed}
+			cell, err := grid.getCell(&Pos{row: row, col: col})
+			if err == nil {
+				box.text = cell.value
+			}
 			drawBox(box)
 			x += colWidth
 		}
