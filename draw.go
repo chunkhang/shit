@@ -53,7 +53,7 @@ func drawBox(box *Box) {
 // DrawHeader draws the header for the application
 func DrawHeader() {
 	text := fmt.Sprintf("%s %s", grid.cursor.pos, grid.cursor.value)
-	drawBox(&Box{x: 0, y: 0, w: term.w, h: 1, bg: tcell.ColorBlue, fg: tcell.ColorBlack, text: text})
+	drawBox(&Box{x: 0, y: 0, w: term.w, h: 1, fg: tcell.ColorSilver, text: text})
 }
 
 // DrawBody draws the body for the application
@@ -64,21 +64,23 @@ func DrawBody() {
 	for n := 1; n < numCols; n++ {
 		x := n * colWidth
 		col := n - 1
-		bg := tcell.ColorYellow
+		bg := tcell.ColorBlack
+		fg := tcell.ColorSilver
 		if col == grid.cursor.pos.col {
-			bg = tcell.ColorSilver
+			bg, fg = fg, bg
 		}
-		box := &Box{x: x, y: 1, w: colWidth, h: 1, bg: bg, fg: tcell.ColorBlack, text: fmt.Sprintf("%d", col)}
+		box := &Box{x: x, y: 1, w: colWidth, h: 1, bg: bg, fg: fg, text: fmt.Sprintf("%d", col)}
 		drawBox(box)
 	}
 	// Column headings
 	for y := 2; y < term.h-1; y++ {
 		row := y - 2
-		bg := tcell.ColorYellow
+		bg := tcell.ColorBlack
+		fg := tcell.ColorSilver
 		if row == grid.cursor.pos.row {
-			bg = tcell.ColorSilver
+			bg, fg = fg, bg
 		}
-		box := &Box{x: 0, y: y, w: colWidth, h: 1, bg: bg, fg: tcell.ColorBlack, text: fmt.Sprintf("%d", row)}
+		box := &Box{x: 0, y: y, w: colWidth, h: 1, bg: bg, fg: fg, text: fmt.Sprintf("%d", row)}
 		drawBox(box)
 	}
 	// Cells
@@ -101,5 +103,5 @@ func DrawBody() {
 
 // DrawFooter draws the footer for the application
 func DrawFooter() {
-	drawBox(&Box{x: 0, y: term.h - 1, w: term.w, h: 1, bg: tcell.ColorGreen})
+	drawBox(&Box{x: 0, y: term.h - 1, w: term.w, h: 1})
 }
