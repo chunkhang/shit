@@ -43,7 +43,7 @@ func HandleKey() {
 				grid.cursor.MoveRight()
 			case ' ':
 				if grid.cursor.value == "" {
-					grid.cursor.value = "*"
+					grid.cursor.value = "appwlqpeqwlpe"
 				} else {
 					grid.cursor.value = ""
 				}

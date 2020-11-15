@@ -30,6 +30,12 @@ const (
 	alignCenter
 )
 
+// Pad is padding for text
+type Pad struct {
+	left  int
+	right int
+}
+
 // Box is a drawable rectangular area
 type Box struct {
 	x     int
@@ -40,6 +46,7 @@ type Box struct {
 	fg    tcell.Color
 	text  string
 	align Align
+	pad   *Pad
 }
 
 func drawBox(box *Box) {
@@ -48,7 +55,7 @@ func drawBox(box *Box) {
 
 	xStart := box.x
 	xEnd := box.x + box.w
-	xLength := xEnd - xStart
+	xLen := xEnd - xStart
 
 	chars := []rune(box.text)
 	charTotal := len(chars)
@@ -56,20 +63,23 @@ func drawBox(box *Box) {
 
 	for y := yStart; y < yEnd; y++ {
 		// Calculate remaining characters for this row
-		// This information is used for text alignment
-		charOffset := 0
-		charRemain := charTotal - i
-		if charRemain < xLength {
+		// This information is used to calculate the offset for alignment
+		charOff := 0
+		charLeft := charTotal - i
+		if charLeft < xLen-box.pad.left-box.pad.right {
 			if box.align == alignRight {
-				charOffset = xLength - charRemain
+				charOff = xLen - charLeft - box.pad.right
 			} else if box.align == alignCenter {
-				charOffset = (xLength - charRemain) / 2
+				charOff = box.pad.left + ((xLen - charLeft - box.pad.right - box.pad.left) / 2)
 			}
 		}
 		for x := xStart; x < xEnd; x++ {
 			point := &Point{x: x, y: y, bg: box.bg, fg: box.fg}
-			offset := x - xStart
-			if i < charTotal && offset >= charOffset {
+			hasChar := i < charTotal
+			afterPadLeft := x-xStart >= box.pad.left
+			beforePadRight := xEnd-x > box.pad.right
+			afterOff := x-xStart >= charOff
+			if hasChar && afterPadLeft && beforePadRight && afterOff {
 				point.char = chars[i]
 				i++
 			}
@@ -92,6 +102,7 @@ func DrawHeader() {
 		bg:   tcell.ColorBlack,
 		fg:   tcell.ColorSilver,
 		text: fmt.Sprintf("%s %s", grid.cursor.pos, grid.cursor.value),
+		pad:  &Pad{},
 	})
 }
 
@@ -130,6 +141,7 @@ func DrawBody() {
 			fg:    fg,
 			text:  strconv.Itoa(col),
 			align: alignCenter,
+			pad:   &Pad{},
 		})
 	}
 
@@ -146,8 +158,9 @@ func DrawBody() {
 			h:     cellHeight,
 			bg:    bg,
 			fg:    fg,
-			text:  fmt.Sprintf("%d ", row),
+			text:  strconv.Itoa(row),
 			align: alignRight,
+			pad:   &Pad{left: 1, right: 1},
 		})
 	}
 
@@ -167,6 +180,7 @@ func DrawBody() {
 				bg:   bg,
 				fg:   fg,
 				text: cell.value,
+				pad:  &Pad{right: 1},
 			})
 		}
 	}
