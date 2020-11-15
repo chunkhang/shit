@@ -2,13 +2,10 @@ package main
 
 import (
 	"fmt"
+	"strconv"
 
 	"github.com/gdamore/tcell/v2"
 )
-
-type Drawable interface {
-	Draw()
-}
 
 // Point is the smallest drawable point
 type Point struct {
@@ -81,62 +78,96 @@ func drawBox(box *Box) {
 	}
 }
 
+const (
+	headerHeight = 1
+)
+
 // DrawHeader draws the header for the application
 func DrawHeader() {
-	text := fmt.Sprintf("%s %s", grid.cursor.pos, grid.cursor.value)
-	drawBox(&Box{x: 0, y: 0, w: term.w, h: 1, bg: tcell.ColorBlack, fg: tcell.ColorSilver, text: text})
+	drawBox(&Box{
+		x:    0,
+		y:    0,
+		w:    term.w,
+		h:    headerHeight,
+		bg:   tcell.ColorBlack,
+		fg:   tcell.ColorSilver,
+		text: fmt.Sprintf("%s %s", grid.cursor.pos, grid.cursor.value),
+	})
 }
+
+const (
+	cellHeight = 1
+	cellWidth  = 9
+)
 
 // DrawBody draws the body for the application
 func DrawBody() {
-	colWidth := 12
-	numCols := term.w / colWidth
-	// Row headings
-	for n := 1; n < numCols; n++ {
-		x := n * colWidth
-		col := n - 1
-		bg := tcell.ColorBlack
-		fg := tcell.ColorSilver
-		// Highlight cursor column
+	yStart := headerHeight
+	yEnd := term.h
+
+	xStart := 0
+	xEnd := term.w
+
+	rowNum := yEnd - yStart - cellHeight
+
+	// Row index width is determined by number of digits in the largest row number
+	// Add 2 to this number for padding
+	rowIndexWidth := len(strconv.Itoa(rowNum)) + 2
+	colNum := (xEnd - xStart - rowIndexWidth) / cellWidth
+
+	// Column index
+	for col := 0; col < colNum; col++ {
+		bg, fg := tcell.ColorBlack, tcell.ColorSilver
 		if col == grid.cursor.pos.col {
 			bg, fg = fg, bg
 		}
-		box := &Box{x: x, y: 1, w: colWidth, h: 1, bg: bg, fg: fg, text: fmt.Sprintf("%d", col), align: alignCenter}
-		drawBox(box)
+		drawBox(&Box{
+			x:     xStart + col*cellWidth + rowIndexWidth,
+			y:     yStart,
+			w:     cellWidth,
+			h:     cellHeight,
+			bg:    bg,
+			fg:    fg,
+			text:  strconv.Itoa(col),
+			align: alignCenter,
+		})
 	}
-	// Column headings
-	for y := 2; y < term.h-1; y++ {
-		row := y - 2
-		bg := tcell.ColorBlack
-		fg := tcell.ColorSilver
-		// Highlight cursor row
+
+	// Row index
+	for row := 0; row < rowNum; row++ {
+		bg, fg := tcell.ColorBlack, tcell.ColorSilver
 		if row == grid.cursor.pos.row {
 			bg, fg = fg, bg
 		}
-		box := &Box{x: 0, y: y, w: colWidth, h: 1, bg: bg, fg: fg, text: fmt.Sprintf("%d", row), align: alignRight}
-		drawBox(box)
+		drawBox(&Box{
+			x:     xStart,
+			y:     yStart + row*cellHeight + cellHeight,
+			w:     rowIndexWidth,
+			h:     cellHeight,
+			bg:    bg,
+			fg:    fg,
+			text:  fmt.Sprintf("%d ", row),
+			align: alignRight,
+		})
 	}
+
 	// Cells
-	for y := 2; y < term.h-1; y++ {
-		x := 0
-		for n := 0; n < numCols-1; n++ {
-			row := y - 2
-			col := n
-			bg := tcell.ColorBlack
-			fg := tcell.ColorSilver
-			// Highlight cursor position
+	for row := 0; row < rowNum; row++ {
+		for col := 0; col < colNum; col++ {
+			bg, fg := tcell.ColorBlack, tcell.ColorSilver
 			if row == grid.cursor.pos.row && col == grid.cursor.pos.col {
 				bg, fg = fg, bg
 			}
 			cell := grid.GetCell(&Pos{row: row, col: col})
-			box := &Box{x: x + colWidth, y: y, w: colWidth, h: 1, bg: bg, fg: fg, text: cell.value}
-			drawBox(box)
-			x += colWidth
+			drawBox(&Box{
+				x:    xStart + col*cellWidth + rowIndexWidth,
+				y:    yStart + row*cellHeight + cellHeight,
+				w:    cellWidth,
+				h:    cellHeight,
+				bg:   bg,
+				fg:   fg,
+				text: cell.value,
+			})
 		}
 	}
-}
-
-// DrawFooter draws the footer for the application
-func DrawFooter() {
-	drawBox(&Box{x: 0, y: term.h - 1, w: term.w, h: 1})
 }

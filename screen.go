@@ -31,7 +31,6 @@ func StartScreen() (err error) {
 func RefreshScreen() {
 	DrawHeader()
 	DrawBody()
-	// DrawFooter()
 	screen.Show()
 }
 
