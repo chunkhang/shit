@@ -6,6 +6,10 @@ import (
 	"github.com/gdamore/tcell/v2"
 )
 
+type Drawable interface {
+	Draw()
+}
+
 // Point is the smallest drawable point
 type Point struct {
 	x    int
@@ -49,7 +53,7 @@ func drawBox(box *Box) {
 // DrawHeader draws the header for the application
 func DrawHeader() {
 	text := fmt.Sprintf("%s %s", grid.cursor.pos, grid.cursor.value)
-	drawBox(&Box{x: 0, y: 0, w: term.w, h: 1, bg: tcell.ColorBlue, fg: tcell.ColorWhite, text: text})
+	drawBox(&Box{x: 0, y: 0, w: term.w, h: 1, bg: tcell.ColorBlue, fg: tcell.ColorBlack, text: text})
 }
 
 // DrawBody draws the body for the application
@@ -62,7 +66,7 @@ func DrawBody() {
 		col := n - 1
 		bg := tcell.ColorYellow
 		if col == grid.cursor.pos.col {
-			bg = tcell.ColorWhite
+			bg = tcell.ColorSilver
 		}
 		box := &Box{x: x, y: 1, w: colWidth, h: 1, bg: bg, fg: tcell.ColorBlack, text: fmt.Sprintf("%d", col)}
 		drawBox(box)
@@ -72,7 +76,7 @@ func DrawBody() {
 		row := y - 2
 		bg := tcell.ColorYellow
 		if row == grid.cursor.pos.row {
-			bg = tcell.ColorWhite
+			bg = tcell.ColorSilver
 		}
 		box := &Box{x: 0, y: y, w: colWidth, h: 1, bg: bg, fg: tcell.ColorBlack, text: fmt.Sprintf("%d", row)}
 		drawBox(box)
@@ -85,10 +89,10 @@ func DrawBody() {
 			row := y - 2
 			col := n
 			if row == grid.cursor.pos.row && col == grid.cursor.pos.col {
-				bg = tcell.ColorWhite
+				bg = tcell.ColorSilver
 			}
 			cell := grid.GetCell(&Pos{row: row, col: col})
-			box := &Box{x: x + colWidth, y: y, w: colWidth, h: 1, bg: bg, fg: tcell.ColorWhite, text: cell.value}
+			box := &Box{x: x + colWidth, y: y, w: colWidth, h: 1, bg: bg, fg: tcell.ColorSilver, text: cell.value}
 			drawBox(box)
 			x += colWidth
 		}
