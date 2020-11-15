@@ -24,24 +24,55 @@ func drawPoint(point *Point) {
 	screen.SetContent(point.x, point.y, point.char, nil, style)
 }
 
+// Align is direction of text alignment
+type Align int
+
+const (
+	alignLeft Align = iota
+	alignRight
+	alignCenter
+)
+
 // Box is a drawable rectangular area
 type Box struct {
-	x    int
-	y    int
-	w    int
-	h    int
-	bg   tcell.Color
-	fg   tcell.Color
-	text string
+	x     int
+	y     int
+	w     int
+	h     int
+	bg    tcell.Color
+	fg    tcell.Color
+	text  string
+	align Align
 }
 
 func drawBox(box *Box) {
-	i := 0
+	yStart := box.y
+	yEnd := box.y + box.h
+
+	xStart := box.x
+	xEnd := box.x + box.w
+	xLength := xEnd - xStart
+
 	chars := []rune(box.text)
-	for y := box.y; y < box.y+box.h; y++ {
-		for x := box.x; x < box.x+box.w; x++ {
+	charTotal := len(chars)
+	i := 0
+
+	for y := yStart; y < yEnd; y++ {
+		// Calculate remaining characters for this row
+		// This information is used for text alignment
+		charOffset := 0
+		charRemain := charTotal - i
+		if charRemain < xLength {
+			if box.align == alignRight {
+				charOffset = xLength - charRemain
+			} else if box.align == alignCenter {
+				charOffset = (xLength - charRemain) / 2
+			}
+		}
+		for x := xStart; x < xEnd; x++ {
 			point := &Point{x: x, y: y, bg: box.bg, fg: box.fg}
-			if i < len(chars) {
+			offset := x - xStart
+			if i < charTotal && offset >= charOffset {
 				point.char = chars[i]
 				i++
 			}
@@ -53,7 +84,7 @@ func drawBox(box *Box) {
 // DrawHeader draws the header for the application
 func DrawHeader() {
 	text := fmt.Sprintf("%s %s", grid.cursor.pos, grid.cursor.value)
-	drawBox(&Box{x: 0, y: 0, w: term.w, h: 1, fg: tcell.ColorSilver, text: text})
+	drawBox(&Box{x: 0, y: 0, w: term.w, h: 1, bg: tcell.ColorBlack, fg: tcell.ColorSilver, text: text})
 }
 
 // DrawBody draws the body for the application
@@ -66,10 +97,11 @@ func DrawBody() {
 		col := n - 1
 		bg := tcell.ColorBlack
 		fg := tcell.ColorSilver
+		// Highlight cursor column
 		if col == grid.cursor.pos.col {
 			bg, fg = fg, bg
 		}
-		box := &Box{x: x, y: 1, w: colWidth, h: 1, bg: bg, fg: fg, text: fmt.Sprintf("%d", col)}
+		box := &Box{x: x, y: 1, w: colWidth, h: 1, bg: bg, fg: fg, text: fmt.Sprintf("%d", col), align: alignCenter}
 		drawBox(box)
 	}
 	// Column headings
@@ -77,24 +109,27 @@ func DrawBody() {
 		row := y - 2
 		bg := tcell.ColorBlack
 		fg := tcell.ColorSilver
+		// Highlight cursor row
 		if row == grid.cursor.pos.row {
 			bg, fg = fg, bg
 		}
-		box := &Box{x: 0, y: y, w: colWidth, h: 1, bg: bg, fg: fg, text: fmt.Sprintf("%d", row)}
+		box := &Box{x: 0, y: y, w: colWidth, h: 1, bg: bg, fg: fg, text: fmt.Sprintf("%d", row), align: alignRight}
 		drawBox(box)
 	}
 	// Cells
 	for y := 2; y < term.h-1; y++ {
 		x := 0
 		for n := 0; n < numCols-1; n++ {
-			var bg tcell.Color
 			row := y - 2
 			col := n
+			bg := tcell.ColorBlack
+			fg := tcell.ColorSilver
+			// Highlight cursor position
 			if row == grid.cursor.pos.row && col == grid.cursor.pos.col {
-				bg = tcell.ColorSilver
+				bg, fg = fg, bg
 			}
 			cell := grid.GetCell(&Pos{row: row, col: col})
-			box := &Box{x: x + colWidth, y: y, w: colWidth, h: 1, bg: bg, fg: tcell.ColorSilver, text: cell.value}
+			box := &Box{x: x + colWidth, y: y, w: colWidth, h: 1, bg: bg, fg: fg, text: cell.value}
 			drawBox(box)
 			x += colWidth
 		}
