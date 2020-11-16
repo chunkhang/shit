@@ -79,7 +79,7 @@ func drawBody() {
 	colNum := (xEnd - xStart - rowIndexWidth) / cellWidth
 
 	lineHeight := 1
-	lineWidth := 1
+	lineWidth := 2
 
 	// Column index
 	for col := 0; col < colNum; col++ {
