@@ -43,17 +43,20 @@ func StopScreen() {
 
 // RefreshScreen redraws the screen with the latest application state
 func RefreshScreen() {
-	DrawHeader()
-	DrawBody()
+	drawHeader()
+	drawBody()
+	drawFooter()
 	screen.Show()
 }
 
 const (
 	headerHeight = 1
+	cellHeight   = 1
+	cellWidth    = 9
+	footerHeight = 1
 )
 
-// DrawHeader draws the header for the application
-func DrawHeader() {
+func drawHeader() {
 	canvas.NewBox(0, 0, term.w, headerHeight).
 		Background(tcell.ColorBlack).
 		Foreground(tcell.ColorSilver).
@@ -61,15 +64,9 @@ func DrawHeader() {
 		Draw()
 }
 
-const (
-	cellHeight = 1
-	cellWidth  = 9
-)
-
-// DrawBody draws the body for the application
-func DrawBody() {
+func drawBody() {
 	yStart := headerHeight
-	yEnd := term.h
+	yEnd := term.h - footerHeight
 
 	xStart := 0
 	xEnd := term.w
@@ -132,4 +129,13 @@ func DrawBody() {
 				Draw()
 		}
 	}
+}
+
+// TODO: Filename and sheets
+func drawFooter() {
+	canvas.NewBox(0, term.h-footerHeight, term.w, footerHeight).
+		Background(tcell.ColorBlack).
+		Foreground(tcell.ColorSilver).
+		Text("[No Name]").
+		Draw()
 }
