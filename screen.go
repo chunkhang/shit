@@ -60,7 +60,7 @@ func drawHeader() {
 	canvas.NewBox(0, 0, term.w, headerHeight).
 		Background(tcell.ColorBlack).
 		Foreground(tcell.ColorSilver).
-		Text(fmt.Sprintf("%s %s", grid.cursor.pos, grid.cursor.value)).
+		Text(fmt.Sprintf("%s %s", grid.cursor.pos.Label(), grid.cursor.value)).
 		Draw()
 }
 
@@ -89,7 +89,7 @@ func drawBody() {
 		canvas.NewBox(x, y, cellWidth, cellHeight).
 			Background(bg).
 			Foreground(fg).
-			Text(strconv.Itoa(col)).
+			Text(ColLabel(col)).
 			AlignCenter().
 			Draw()
 	}
@@ -105,7 +105,7 @@ func drawBody() {
 		canvas.NewBox(x, y, rowIndexWidth, cellHeight).
 			Background(bg).
 			Foreground(fg).
-			Text(strconv.Itoa(row)).
+			Text(RowLabel(row)).
 			AlignRight().
 			Pad(1).
 			Draw()
