@@ -97,11 +97,12 @@ func drawBody() {
 			Draw()
 	}
 
+	xStartHLine := xStart + rowIndexWidth
 	xEndHLine := xStart + lineWidth + rowIndexWidth + colNum*cellWidth
 	yHLine := yStart + cellHeight
 
 	// Horizontal line (top and bottom)
-	for x := xStart; x < xEndHLine; x++ {
+	for x := xStartHLine; x < xEndHLine; x++ {
 		canvas.NewPoint(x, yHLine).Char(tcell.RuneHLine).Draw()
 	}
 
@@ -122,15 +123,16 @@ func drawBody() {
 			Draw()
 	}
 
+	yStartVLine := yStart + cellHeight
 	xVLine := xStart + rowIndexWidth
 
 	// Vertical line
-	for y := yStart; y < yEnd; y++ {
+	for y := yStartVLine; y < yEnd; y++ {
 		canvas.NewPoint(xVLine, y).Char(tcell.RuneVLine).Draw()
 	}
 
 	// Line intersection
-	canvas.NewPoint(xVLine, yHLine).Char(tcell.RunePlus).Draw()
+	canvas.NewPoint(xVLine, yHLine).Char(tcell.RuneULCorner).Draw()
 
 	// Cells
 	for row := 0; row < rowNum; row++ {
