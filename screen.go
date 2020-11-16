@@ -53,7 +53,7 @@ const (
 	headerHeight = 1
 	cellHeight   = 1
 	cellWidth    = 9
-	footerHeight = 1
+	footerHeight = 2
 )
 
 func drawHeader() {
@@ -78,13 +78,16 @@ func drawBody() {
 	rowIndexWidth := len(strconv.Itoa(rowNum)) + 2
 	colNum := (xEnd - xStart - rowIndexWidth) / cellWidth
 
+	lineHeight := 1
+	lineWidth := 1
+
 	// Column index
 	for col := 0; col < colNum; col++ {
 		bg, fg := tcell.ColorBlack, tcell.ColorSilver
 		if col == grid.cursor.pos.col {
 			bg, fg = fg, bg
 		}
-		x := xStart + col*cellWidth + rowIndexWidth
+		x := xStart + lineWidth + col*cellWidth + rowIndexWidth
 		y := yStart
 		canvas.NewBox(x, y, cellWidth, cellHeight).
 			Background(bg).
@@ -94,6 +97,14 @@ func drawBody() {
 			Draw()
 	}
 
+	xEndHLine := xStart + lineWidth + rowIndexWidth + colNum*cellWidth
+	yHLine := yStart + cellHeight
+
+	// Horizontal line (top and bottom)
+	for x := xStart; x < xEndHLine; x++ {
+		canvas.NewPoint(x, yHLine).Char(tcell.RuneHLine).Draw()
+	}
+
 	// Row index
 	for row := 0; row < rowNum; row++ {
 		bg, fg := tcell.ColorBlack, tcell.ColorSilver
@@ -101,7 +112,7 @@ func drawBody() {
 			bg, fg = fg, bg
 		}
 		x := xStart
-		y := yStart + row*cellHeight + cellHeight
+		y := yStart + row*cellHeight + cellHeight + lineHeight
 		canvas.NewBox(x, y, rowIndexWidth, cellHeight).
 			Background(bg).
 			Foreground(fg).
@@ -111,6 +122,16 @@ func drawBody() {
 			Draw()
 	}
 
+	xVLine := xStart + rowIndexWidth
+
+	// Vertical line
+	for y := yStart; y < yEnd; y++ {
+		canvas.NewPoint(xVLine, y).Char(tcell.RuneVLine).Draw()
+	}
+
+	// Line intersection
+	canvas.NewPoint(xVLine, yHLine).Char(tcell.RunePlus).Draw()
+
 	// Cells
 	for row := 0; row < rowNum; row++ {
 		for col := 0; col < colNum; col++ {
@@ -119,8 +140,8 @@ func drawBody() {
 				bg, fg = fg, bg
 			}
 			cell := grid.GetCell(&Pos{row: row, col: col})
-			x := xStart + col*cellWidth + rowIndexWidth
-			y := yStart + row*cellHeight + cellHeight
+			x := xStart + lineWidth + col*cellWidth + rowIndexWidth
+			y := yStart + lineHeight + row*cellHeight + cellHeight
 			canvas.NewBox(x, y, cellWidth, cellHeight).
 				Background(bg).
 				Foreground(fg).
@@ -131,7 +152,6 @@ func drawBody() {
 	}
 }
 
-// TODO: Filename and sheets
 func drawFooter() {
 	canvas.NewBox(0, term.h-footerHeight, term.w, footerHeight).
 		Background(tcell.ColorBlack).
