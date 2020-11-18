@@ -68,7 +68,7 @@ func drawBody() {
 
 	rowStart := grid.rowOff
 	rowLim := yEnd - yStart - (2 * cellHeight)
-	rowEnd := rowStart + rowLim
+	rowEnd := Min(rowStart+rowLim, grid.rowTotal)
 	grid.rowLim = rowLim
 
 	// Row index width is determined by number of digits in the largest row number
@@ -76,7 +76,7 @@ func drawBody() {
 	rowIndexWidth := len(strconv.Itoa(rowEnd)) + 2
 	colStart := grid.colOff
 	colLim := (xEnd - xStart - rowIndexWidth) / cellWidth
-	colEnd := colStart + colLim
+	colEnd := Min(colStart+colLim, grid.colTotal)
 	grid.colLim = colLim
 
 	// Column index
