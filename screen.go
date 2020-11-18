@@ -37,6 +37,7 @@ func StopScreen() {
 
 // RefreshScreen redraws the screen with the latest application state
 func RefreshScreen() {
+	screen.Clear()
 	drawHeader()
 	drawBody()
 	drawFooter()
@@ -45,6 +46,8 @@ func RefreshScreen() {
 
 const (
 	headerHeight = 1
+	lineHeight   = 1
+	lineWidth    = 2
 	cellHeight   = 1
 	cellWidth    = 9
 	footerHeight = 2
@@ -63,25 +66,22 @@ func drawBody() {
 	xStart := 0
 	xEnd := term.w
 
-	rowNum := yEnd - yStart - cellHeight
-	if grid.rowTotal < rowNum {
-		rowNum = grid.rowTotal
-	}
+	rowStart := grid.rowOff
+	rowLim := yEnd - yStart - (2 * cellHeight)
+	rowEnd := rowStart + rowLim
+	grid.rowLim = rowLim
 
 	// Row index width is determined by number of digits in the largest row number
 	// Add 2 to this number for padding
-	rowIndexWidth := len(strconv.Itoa(rowNum)) + 2
-	colNum := (xEnd - xStart - rowIndexWidth) / cellWidth
-	if grid.colTotal < colNum {
-		colNum = grid.colTotal
-	}
-
-	lineHeight := 1
-	lineWidth := 2
+	rowIndexWidth := len(strconv.Itoa(rowEnd)) + 2
+	colStart := grid.colOff
+	colLim := (xEnd - xStart - rowIndexWidth) / cellWidth
+	colEnd := colStart + colLim
+	grid.colLim = colLim
 
 	// Column index
-	for col := 0; col < colNum; col++ {
-		x := xStart + lineWidth + col*cellWidth + rowIndexWidth
+	for col := colStart; col < colEnd; col++ {
+		x := xStart + lineWidth + (col-colStart)*cellWidth + rowIndexWidth
 		y := yStart
 		canvas.NewBox(x, y, cellWidth, cellHeight).
 			Reverse(col == grid.cursor.pos.col).
@@ -91,20 +91,19 @@ func drawBody() {
 	}
 
 	xStartHLine := xStart + rowIndexWidth
-	xEndHLine := xStart + lineWidth + rowIndexWidth + colNum*cellWidth
 	yHLine := yStart + cellHeight
 
 	// Horizontal line
-	for x := xStartHLine; x < xEndHLine; x++ {
+	for x := xStartHLine; x < xEnd; x++ {
 		canvas.NewPoint(x, yHLine).
 			Char(tcell.RuneHLine).
 			Draw()
 	}
 
 	// Row index
-	for row := 0; row < rowNum; row++ {
+	for row := rowStart; row < rowEnd; row++ {
 		x := xStart
-		y := yStart + row*cellHeight + cellHeight + lineHeight
+		y := yStart + (row-rowStart+1)*cellHeight + lineHeight
 		canvas.NewBox(x, y, rowIndexWidth, cellHeight).
 			Reverse(row == grid.cursor.pos.row).
 			Text(RowLabel(row)).
@@ -129,11 +128,11 @@ func drawBody() {
 		Draw()
 
 	// Cells
-	for row := 0; row < rowNum; row++ {
-		for col := 0; col < colNum; col++ {
+	for row := rowStart; row < rowEnd; row++ {
+		for col := colStart; col < colEnd; col++ {
 			cell := grid.GetCell(&Pos{row: row, col: col})
-			x := xStart + lineWidth + col*cellWidth + rowIndexWidth
-			y := yStart + lineHeight + row*cellHeight + cellHeight
+			x := xStart + lineWidth + (col-colStart)*cellWidth + rowIndexWidth
+			y := yStart + lineHeight + (row-rowStart+1)*cellHeight
 			canvas.NewBox(x, y, cellWidth, cellHeight).
 				Reverse(row == grid.cursor.pos.row && col == grid.cursor.pos.col).
 				Text(cell.value).

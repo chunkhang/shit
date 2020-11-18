@@ -32,6 +32,22 @@ func (c *Cursor) moveTo(row, col int) {
 	if row >= grid.rowTotal || col >= grid.colTotal {
 		return
 	}
+
+	// Update cursor
 	pos := &Pos{row: row, col: col}
 	grid.cursor = &Cursor{grid.GetCell(pos)}
+
+	// Update pagination
+	if row <= grid.rowOff {
+		grid.rowOff = Max(grid.rowOff-grid.rowLim, 0)
+	}
+	if row >= grid.rowOff+grid.rowLim {
+		grid.rowOff += grid.rowLim
+	}
+	if col <= grid.colOff {
+		grid.colOff = Max(grid.colOff-grid.colLim, 0)
+	}
+	if col >= grid.colOff+grid.colLim {
+		grid.colOff += grid.colLim
+	}
 }

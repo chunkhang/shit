@@ -52,16 +52,23 @@ type Cell struct {
 
 // Grid holds the state of the cell grid
 type Grid struct {
-	cells    map[int]map[int]*Cell
-	cursor   *Cursor
+	cells  map[int]map[int]*Cell
+	cursor *Cursor
+	// Total number of rows and columns
 	rowTotal int
 	colTotal int
+	// Offset for pagination
+	rowOff int
+	colOff int
+	// Limit for pagination
+	rowLim int
+	colLim int
 }
 
 var grid = &Grid{
 	cells:    map[int]map[int]*Cell{},
-	rowTotal: 10,
-	colTotal: 5,
+	rowTotal: 50,
+	colTotal: 10,
 }
 
 func init() {
