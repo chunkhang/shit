@@ -1,15 +1,8 @@
 package main
 
 import (
-	"fmt"
 	"strconv"
 )
-
-// Pos is the coordinate for a cell
-type Pos struct {
-	row int
-	col int
-}
 
 // RowLabel returns the label for given row index
 func RowLabel(row int) string {
@@ -35,18 +28,10 @@ func ColLabel(col int) string {
 	return label
 }
 
-// Label returns the location label for position
-func (p *Pos) Label() string {
-	return fmt.Sprintf("%s%s", ColLabel(p.col), RowLabel(p.row))
-}
-
-func (p *Pos) String() string {
-	return fmt.Sprintf("(%d, %d)", p.row, p.col)
-}
-
-// Cell holds the state of a cell
+// Cell represents a single cell in the grid
 type Cell struct {
-	pos   *Pos
+	row   int
+	col   int
 	value string
 }
 
@@ -78,24 +63,24 @@ var grid = &Grid{
 
 func init() {
 	// Set first cell as cursor
-	cell := grid.GetCell(&Pos{row: 0, col: 0})
+	cell := grid.GetCell(0, 0)
 	grid.cursor = &Cursor{cell}
 }
 
 // GetCell retuns the cell at the position provided
 // The cell will be created if it is not present
-func (g *Grid) GetCell(pos *Pos) *Cell {
+func (g *Grid) GetCell(row, col int) *Cell {
 	var cellRow map[int]*Cell
-	cellRow, ok := g.cells[pos.row]
+	cellRow, ok := g.cells[row]
 	if !ok {
 		cellRow = map[int]*Cell{}
-		g.cells[pos.row] = cellRow
+		g.cells[row] = cellRow
 	}
 	var cell *Cell
-	cell, ok = cellRow[pos.col]
+	cell, ok = cellRow[col]
 	if !ok {
-		cell = &Cell{pos: pos}
-		cellRow[pos.col] = cell
+		cell = &Cell{row: row, col: col}
+		cellRow[col] = cell
 	}
 	return cell
 }

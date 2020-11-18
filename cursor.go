@@ -7,25 +7,26 @@ type Cursor struct {
 
 // MoveDown moves the grid cursor down
 func (c *Cursor) MoveDown() {
-	c.moveTo(c.pos.row+1, c.pos.col)
+	c.MoveTo(c.row+1, c.col)
 }
 
 // MoveUp moves the grid cursor up
 func (c *Cursor) MoveUp() {
-	c.moveTo(c.pos.row-1, c.pos.col)
+	c.MoveTo(c.row-1, c.col)
 }
 
 // MoveLeft moves the grid cursor left
 func (c *Cursor) MoveLeft() {
-	c.moveTo(c.pos.row, c.pos.col-1)
+	c.MoveTo(c.row, c.col-1)
 }
 
 // MoveRight moves the grid cursor right
 func (c *Cursor) MoveRight() {
-	c.moveTo(c.pos.row, c.pos.col+1)
+	c.MoveTo(c.row, c.col+1)
 }
 
-func (c *Cursor) moveTo(row, col int) {
+// MoveTo moves the grid cursor to the given position
+func (c *Cursor) MoveTo(row, col int) {
 	if row < 0 || col < 0 {
 		return
 	}
@@ -34,8 +35,7 @@ func (c *Cursor) moveTo(row, col int) {
 	}
 
 	// Update cursor
-	pos := &Pos{row: row, col: col}
-	grid.cursor = &Cursor{grid.GetCell(pos)}
+	grid.cursor = &Cursor{grid.GetCell(row, col)}
 
 	// Update pagination
 	if row <= grid.rowOff {

@@ -54,8 +54,9 @@ const (
 )
 
 func drawHeader() {
+	text := fmt.Sprintf("%s%s", ColLabel(grid.cursor.col), RowLabel(grid.cursor.row))
 	canvas.NewBox(0, 0, term.w, headerHeight).
-		Text(fmt.Sprintf("%s %s", grid.cursor.pos.Label(), grid.cursor.value)).
+		Text(fmt.Sprintf("%s %s", text, grid.cursor.value)).
 		Draw()
 }
 
@@ -84,7 +85,7 @@ func drawBody() {
 		x := xStart + lineWidth + (col-colStart)*cellWidth + rowIndexWidth
 		y := yStart
 		canvas.NewBox(x, y, cellWidth, cellHeight).
-			Reverse(col == grid.cursor.pos.col).
+			Reverse(col == grid.cursor.col).
 			Text(ColLabel(col)).
 			AlignCenter().
 			Draw()
@@ -105,7 +106,7 @@ func drawBody() {
 		x := xStart
 		y := yStart + (row-rowStart+1)*cellHeight + lineHeight
 		canvas.NewBox(x, y, rowIndexWidth, cellHeight).
-			Reverse(row == grid.cursor.pos.row).
+			Reverse(row == grid.cursor.row).
 			Text(RowLabel(row)).
 			AlignRight().
 			Pad(1).
@@ -130,11 +131,11 @@ func drawBody() {
 	// Cells
 	for row := rowStart; row < rowEnd; row++ {
 		for col := colStart; col < colEnd; col++ {
-			cell := grid.GetCell(&Pos{row: row, col: col})
+			cell := grid.GetCell(row, col)
 			x := xStart + lineWidth + (col-colStart)*cellWidth + rowIndexWidth
 			y := yStart + lineHeight + (row-rowStart+1)*cellHeight
 			canvas.NewBox(x, y, cellWidth, cellHeight).
-				Reverse(row == grid.cursor.pos.row && col == grid.cursor.pos.col).
+				Reverse(row == grid.cursor.row && col == grid.cursor.col).
 				Text(cell.value).
 				PadRight(1).
 				Draw()
