@@ -52,15 +52,22 @@ type Cell struct {
 
 // Grid holds the state of the cell grid
 type Grid struct {
-	cursor *Cursor
-	cells  map[int]map[int]*Cell
+	cells    map[int]map[int]*Cell
+	cursor   *Cursor
+	rowTotal int
+	colTotal int
 }
 
-var grid = &Grid{}
+var grid = &Grid{
+	cells:    map[int]map[int]*Cell{},
+	rowTotal: 10,
+	colTotal: 5,
+}
 
 func init() {
-	grid.cells = map[int]map[int]*Cell{}
-	grid.cursor = &Cursor{grid.GetCell(&Pos{row: 0, col: 0})}
+	// Set first cell as cursor
+	cell := grid.GetCell(&Pos{row: 0, col: 0})
+	grid.cursor = &Cursor{cell}
 }
 
 // GetCell retuns the cell at the position provided

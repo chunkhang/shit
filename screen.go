@@ -64,11 +64,17 @@ func drawBody() {
 	xEnd := term.w
 
 	rowNum := yEnd - yStart - cellHeight
+	if grid.rowTotal < rowNum {
+		rowNum = grid.rowTotal
+	}
 
 	// Row index width is determined by number of digits in the largest row number
 	// Add 2 to this number for padding
 	rowIndexWidth := len(strconv.Itoa(rowNum)) + 2
 	colNum := (xEnd - xStart - rowIndexWidth) / cellWidth
+	if grid.colTotal < colNum {
+		colNum = grid.colTotal
+	}
 
 	lineHeight := 1
 	lineWidth := 2
