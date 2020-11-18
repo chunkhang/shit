@@ -46,16 +46,16 @@ func (c *Cursor) MoveTo(row, col int) {
 	grid.cursor = &Cursor{grid.GetCell(row, col)}
 
 	// Update pagination
-	if row <= grid.rowOff {
-		grid.rowOff = Max(grid.rowOff-grid.rowLim, 0)
+	if row < grid.rowOff {
+		grid.rowOff = Max(grid.rowOff-1, 0)
 	}
 	if row >= grid.rowOff+grid.rowLim {
-		grid.rowOff += grid.rowLim
+		grid.rowOff++
 	}
-	if col <= grid.colOff {
-		grid.colOff = Max(grid.colOff-grid.colLim, 0)
+	if col < grid.colOff {
+		grid.colOff = Max(grid.colOff-1, 0)
 	}
 	if col >= grid.colOff+grid.colLim {
-		grid.colOff += grid.colLim
+		grid.colOff++
 	}
 }
