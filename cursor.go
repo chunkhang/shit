@@ -33,6 +33,11 @@ func (c *Cursor) MoveRight() {
 	c.MoveTo(c.row, c.col+1)
 }
 
+const (
+	// Scroll offset of 0 provides the smoothest scrolling
+	scrollOff = 0
+)
+
 // MoveTo moves the grid cursor to the given position
 func (c *Cursor) MoveTo(row, col int) {
 	if row < 0 || col < 0 {
@@ -46,16 +51,16 @@ func (c *Cursor) MoveTo(row, col int) {
 	grid.cursor = &Cursor{grid.GetCell(row, col)}
 
 	// Update pagination
-	if row < grid.rowOff {
+	if row < grid.rowOff+scrollOff {
 		grid.rowOff = Max(grid.rowOff-1, 0)
 	}
-	if row >= grid.rowOff+grid.rowLim {
+	if row >= grid.rowOff+grid.rowLim-scrollOff {
 		grid.rowOff++
 	}
-	if col < grid.colOff {
+	if col < grid.colOff+scrollOff {
 		grid.colOff = Max(grid.colOff-1, 0)
 	}
-	if col >= grid.colOff+grid.colLim {
+	if col >= grid.colOff+grid.colLim-scrollOff {
 		grid.colOff++
 	}
 }
