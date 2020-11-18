@@ -7,36 +7,31 @@ type Cursor struct {
 
 // MoveDown moves the grid cursor down
 func (c *Cursor) MoveDown() {
-	if c.pos.row+1 >= grid.rowTotal {
-		return
-	}
-	newPos := &Pos{row: c.pos.row + 1, col: c.pos.col}
-	grid.cursor = &Cursor{grid.GetCell(newPos)}
+	c.moveTo(c.pos.row+1, c.pos.col)
 }
 
 // MoveUp moves the grid cursor up
 func (c *Cursor) MoveUp() {
-	if c.pos.row == 0 {
-		return
-	}
-	newPos := &Pos{row: c.pos.row - 1, col: c.pos.col}
-	grid.cursor = &Cursor{grid.GetCell(newPos)}
+	c.moveTo(c.pos.row-1, c.pos.col)
 }
 
 // MoveLeft moves the grid cursor left
 func (c *Cursor) MoveLeft() {
-	if c.pos.col == 0 {
-		return
-	}
-	newPos := &Pos{row: c.pos.row, col: c.pos.col - 1}
-	grid.cursor = &Cursor{grid.GetCell(newPos)}
+	c.moveTo(c.pos.row, c.pos.col-1)
 }
 
 // MoveRight moves the grid cursor right
 func (c *Cursor) MoveRight() {
-	if c.pos.col+1 >= grid.colTotal {
+	c.moveTo(c.pos.row, c.pos.col+1)
+}
+
+func (c *Cursor) moveTo(row, col int) {
+	if row < 0 || col < 0 {
 		return
 	}
-	newPos := &Pos{row: c.pos.row, col: c.pos.col + 1}
-	grid.cursor = &Cursor{grid.GetCell(newPos)}
+	if row >= grid.rowTotal || col >= grid.colTotal {
+		return
+	}
+	pos := &Pos{row: row, col: col}
+	grid.cursor = &Cursor{grid.GetCell(pos)}
 }
