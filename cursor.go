@@ -5,6 +5,14 @@ type Cursor struct {
 	*Cell
 }
 
+// IsVisible checks whether the cursor is visible on screen
+// After resizing the terminal, the cursor may not be visible
+func (c *Cursor) IsVisible() bool {
+	rowOK := c.row >= grid.rowOff && c.row < grid.rowOff+grid.rowLim
+	colOK := c.col >= grid.colOff && c.col < grid.colOff+grid.colLim
+	return rowOK && colOK
+}
+
 // MoveDown moves the grid cursor down
 func (c *Cursor) MoveDown() {
 	c.MoveTo(c.row+1, c.col)

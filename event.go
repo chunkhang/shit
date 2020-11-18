@@ -8,10 +8,30 @@ import (
 func HandleResize() {
 	for {
 		event := <-channel.resize
-		width, height := event.Size()
-		term.w = width
-		term.h = height
+		w, h := event.Size()
+
+		// Determine resize direction
+		resizeH := term.w != w
+		resizeV := term.h != h
+
+		// Update screen with new terminal size
+		term.w = w
+		term.h = h
 		RefreshScreen()
+
+		// Reposition cursor if it is gone
+		if !grid.cursor.IsVisible() {
+			col := grid.cursor.col
+			if resizeH {
+				col = grid.colOff + grid.colLim - 1
+			}
+			row := grid.cursor.row
+			if resizeV {
+				row = grid.rowOff + grid.rowLim - 1
+			}
+			grid.cursor.MoveTo(row, col)
+			RefreshScreen()
+		}
 	}
 }
 
