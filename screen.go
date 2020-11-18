@@ -23,12 +23,6 @@ func StartScreen() (err error) {
 		return
 	}
 
-	reset := tcell.ColorReset
-	style := tcell.StyleDefault.Background(reset).Foreground(reset)
-	screen.SetStyle(style)
-
-	screen.Clear()
-
 	canvas = &cv.Canvas{
 		Screen: screen,
 	}
@@ -58,8 +52,6 @@ const (
 
 func drawHeader() {
 	canvas.NewBox(0, 0, term.w, headerHeight).
-		Background(tcell.ColorBlack).
-		Foreground(tcell.ColorSilver).
 		Text(fmt.Sprintf("%s %s", grid.cursor.pos.Label(), grid.cursor.value)).
 		Draw()
 }
@@ -83,15 +75,10 @@ func drawBody() {
 
 	// Column index
 	for col := 0; col < colNum; col++ {
-		bg, fg := tcell.ColorBlack, tcell.ColorSilver
-		if col == grid.cursor.pos.col {
-			bg, fg = fg, bg
-		}
 		x := xStart + lineWidth + col*cellWidth + rowIndexWidth
 		y := yStart
 		canvas.NewBox(x, y, cellWidth, cellHeight).
-			Background(bg).
-			Foreground(fg).
+			Reverse(col == grid.cursor.pos.col).
 			Text(ColLabel(col)).
 			AlignCenter().
 			Draw()
@@ -104,22 +91,16 @@ func drawBody() {
 	// Horizontal line
 	for x := xStartHLine; x < xEndHLine; x++ {
 		canvas.NewPoint(x, yHLine).
-			Foreground(tcell.ColorWhite).
 			Char(tcell.RuneHLine).
 			Draw()
 	}
 
 	// Row index
 	for row := 0; row < rowNum; row++ {
-		bg, fg := tcell.ColorBlack, tcell.ColorSilver
-		if row == grid.cursor.pos.row {
-			bg, fg = fg, bg
-		}
 		x := xStart
 		y := yStart + row*cellHeight + cellHeight + lineHeight
 		canvas.NewBox(x, y, rowIndexWidth, cellHeight).
-			Background(bg).
-			Foreground(fg).
+			Reverse(row == grid.cursor.pos.row).
 			Text(RowLabel(row)).
 			AlignRight().
 			Pad(1).
@@ -132,30 +113,23 @@ func drawBody() {
 	// Vertical line
 	for y := yStartVLine; y < yEnd; y++ {
 		canvas.NewPoint(xVLine, y).
-			Foreground(tcell.ColorWhite).
 			Char(tcell.RuneVLine).
 			Draw()
 	}
 
 	// Line intersection
 	canvas.NewPoint(xVLine, yHLine).
-		Foreground(tcell.ColorWhite).
 		Char(tcell.RuneULCorner).
 		Draw()
 
 	// Cells
 	for row := 0; row < rowNum; row++ {
 		for col := 0; col < colNum; col++ {
-			bg, fg := tcell.ColorBlack, tcell.ColorSilver
-			if row == grid.cursor.pos.row && col == grid.cursor.pos.col {
-				bg, fg = fg, bg
-			}
 			cell := grid.GetCell(&Pos{row: row, col: col})
 			x := xStart + lineWidth + col*cellWidth + rowIndexWidth
 			y := yStart + lineHeight + row*cellHeight + cellHeight
 			canvas.NewBox(x, y, cellWidth, cellHeight).
-				Background(bg).
-				Foreground(fg).
+				Reverse(row == grid.cursor.pos.row && col == grid.cursor.pos.col).
 				Text(cell.value).
 				PadRight(1).
 				Draw()
@@ -165,8 +139,6 @@ func drawBody() {
 
 func drawFooter() {
 	canvas.NewBox(0, term.h-footerHeight, term.w, footerHeight).
-		Background(tcell.ColorBlack).
-		Foreground(tcell.ColorSilver).
 		Text("[No Name]").
 		Draw()
 }

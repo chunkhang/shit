@@ -13,6 +13,7 @@ type Box struct {
 	H       int
 	Bg      tcell.Color
 	Fg      tcell.Color
+	Rev     bool
 	Content *Content
 }
 
@@ -22,9 +23,15 @@ func (b *Box) Background(bg tcell.Color) *Box {
 	return b
 }
 
-// Foreground sets the text for box
+// Foreground sets the foreground for box
 func (b *Box) Foreground(fg tcell.Color) *Box {
 	b.Fg = fg
+	return b
+}
+
+// Reverse reverses the background and foreground for point
+func (b *Box) Reverse(on bool) *Box {
+	b.Rev = on
 	return b
 }
 
@@ -97,7 +104,10 @@ func (b *Box) Draw() {
 			}
 		}
 		for x := xStart; x < xEnd; x++ {
-			point := b.canvas.NewPoint(x, y).Background(b.Bg).Foreground(b.Fg)
+			point := b.canvas.NewPoint(x, y).
+				Background(b.Bg).
+				Foreground(b.Fg).
+				Reverse(b.Rev)
 			hasChar := i < charTotal
 			afterPadLeft := x-xStart >= b.Content.Pad.Left
 			beforePadRight := xEnd-x > b.Content.Pad.Right

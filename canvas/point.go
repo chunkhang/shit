@@ -11,6 +11,7 @@ type Point struct {
 	Y      int
 	Bg     tcell.Color
 	Fg     tcell.Color
+	Rev    bool
 	Rune   rune
 }
 
@@ -26,6 +27,12 @@ func (p *Point) Foreground(fg tcell.Color) *Point {
 	return p
 }
 
+// Reverse reverses the background and foreground for point
+func (p *Point) Reverse(on bool) *Point {
+	p.Rev = on
+	return p
+}
+
 // Char sets the rune for point
 func (p *Point) Char(char rune) *Point {
 	p.Rune = char
@@ -34,6 +41,9 @@ func (p *Point) Char(char rune) *Point {
 
 // Draw draws the point on canvas screen
 func (p *Point) Draw() {
-	style := tcell.StyleDefault.Background(p.Bg).Foreground(p.Fg)
+	style := tcell.StyleDefault.
+		Background(p.Bg).
+		Foreground(p.Fg).
+		Reverse(p.Rev)
 	p.canvas.Screen.SetContent(p.X, p.Y, p.Rune, nil, style)
 }
