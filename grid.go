@@ -65,10 +65,15 @@ type Grid struct {
 	colLim int
 }
 
+const (
+	defaultRowTotal = 1000
+	defaultColTotal = 1000
+)
+
 var grid = &Grid{
 	cells:    map[int]map[int]*Cell{},
-	rowTotal: 50,
-	colTotal: 10,
+	rowTotal: defaultRowTotal,
+	colTotal: defaultColTotal,
 }
 
 func init() {
