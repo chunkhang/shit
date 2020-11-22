@@ -1,7 +1,9 @@
 package main
 
 import (
+	"fmt"
 	"log"
+	"os"
 )
 
 func main() {
@@ -21,6 +23,8 @@ func main() {
 
 func checkErr(err error) {
 	if err != nil {
-		log.Fatalf("%v", err.Error())
+		log.Printf("%v", err.Error())
+		fmt.Printf("%v\n", err.Error())
+		os.Exit(1)
 	}
 }
