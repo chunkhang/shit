@@ -20,6 +20,9 @@ func ReadCSV() (err error) {
 		return
 	}
 
+	grid.rowTotal = len(records)
+	grid.colTotal = len(records[0])
+
 	for row, record := range records {
 		for col, value := range record {
 			grid.SetCell(row, col, value)
