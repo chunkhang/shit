@@ -7,21 +7,21 @@ import (
 
 const fileName = "xr.log"
 
-var file *os.File
+var logFile *os.File
 
 // StartLog opens the log file
 func StartLog() (err error) {
-	file, err = os.OpenFile(fileName, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	logFile, err = os.OpenFile(fileName, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
 		return
 	}
 
-	log.SetOutput(file)
+	log.SetOutput(logFile)
 
 	return
 }
 
 // StopLog closes the log file
 func StopLog() (err error) {
-	return file.Close()
+	return logFile.Close()
 }

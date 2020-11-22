@@ -5,16 +5,22 @@ import (
 	"os"
 )
 
+var inFile *os.File
+
 // ReadCSV reads a csv file and parses it into grid cells
 func ReadCSV() (err error) {
-	filename := os.Args[1]
+	if len(os.Args) < 2 {
+		return
+	}
 
-	file, err := os.Open(filename)
+	path := os.Args[1]
+
+	inFile, err = os.Open(path)
 	if err != nil {
 		return
 	}
 
-	reader := csv.NewReader(file)
+	reader := csv.NewReader(inFile)
 	records, err := reader.ReadAll()
 	if err != nil {
 		return

@@ -144,7 +144,11 @@ func drawBody() {
 }
 
 func drawFooter() {
+	filename := "[No Name]"
+	if inFile != nil {
+		filename = inFile.Name()
+	}
 	canvas.NewBox(0, term.h-footerHeight, term.w, footerHeight).
-		Text("[No Name]").
+		Text(filename).
 		Draw()
 }
