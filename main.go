@@ -9,6 +9,9 @@ func main() {
 	checkErr(err)
 	defer StopLog()
 
+	err = ReadCSV()
+	checkErr(err)
+
 	err = StartScreen()
 	checkErr(err)
 	defer StopScreen()

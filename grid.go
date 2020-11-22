@@ -84,3 +84,10 @@ func (g *Grid) GetCell(row, col int) *Cell {
 	}
 	return cell
 }
+
+// SetCell sets the cell value for the position provided
+// The cell will be created if it is not present
+func (g *Grid) SetCell(row, col int, value string) {
+	cell := g.GetCell(row, col)
+	cell.value = value
+}
