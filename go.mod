@@ -1,4 +1,4 @@
-module github.com/chunkhang/xr
+module github.com/chunkhang/shit
 
 go 1.13
 

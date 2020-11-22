@@ -5,7 +5,7 @@ import (
 	"os"
 )
 
-const fileName = "xr.log"
+const fileName = "shit.log"
 
 var logFile *os.File
 

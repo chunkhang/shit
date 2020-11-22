@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strconv"
 
-	cv "github.com/chunkhang/xr/canvas"
+	cv "github.com/chunkhang/shit/canvas"
 	"github.com/gdamore/tcell/v2"
 )
 
