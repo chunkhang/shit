@@ -13,7 +13,7 @@ you can use from the comforts of your terminal.
 ## Installation
 
 I have plans of making `shit` available on Homebrew, as well as
-publishing precompiled binaries for easier installation. However, for
+publishing pre-compiled binaries for easier installation. However, for
 now, please make sure you have `go` on your system before installing
 `shit`.
 
