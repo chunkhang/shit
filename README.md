@@ -17,20 +17,18 @@ publishing pre-compiled binaries for easier installation. However, for
 now, please make sure you have `go` on your system before installing
 `shit`.
 
-### Automatic
+```
+go get github.com/chunkhang/shit
+```
 
-- The fastest way is to use `go get github.com/chunkhang/shit`
+## Building
 
-### Manual
-
-- Clone this repository into the right path: `$GOPATH/src/github.com/chunkhang/shit`
-- Build with `go build`
-- Move the built binary `shit` to somewhere like `/usr/local/bin`
+See [BUILD.md](./BUILD.md).
 
 ## Usage
 
 ```
-shit [file]
+shit [filename]
 ```
 
 ## FAQ

@@ -8,13 +8,7 @@ import (
 var inFile *os.File
 
 // ReadCSV reads a csv file and parses it into grid cells
-func ReadCSV() (err error) {
-	if len(os.Args) < 2 {
-		return
-	}
-
-	path := os.Args[1]
-
+func ReadCSV(path string) (err error) {
 	inFile, err = os.Open(path)
 	if err != nil {
 		return
