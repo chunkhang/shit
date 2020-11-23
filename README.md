@@ -16,24 +16,14 @@ you can use from the comforts of your terminal.
 
 ## Installation
 
-### Homebrew
-
-[TODO]
-
-### GitHub
-
-[TODO]
-
-### Go
-
-```
-go get github.com/chunkhang/shit
-```
+- Clone this repository into the right path: `$GOPATH/src/github.com/chunkhang/shit`
+- Build with `go build`
+- Move the built binary `shit` to somewhere like `/usr/local/bin`
 
 ## Usage
 
 ```
-shit example.csv
+shit [file]
 ```
 
 ## FAQ
