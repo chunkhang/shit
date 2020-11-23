@@ -41,3 +41,5 @@ command allows us to follow the logs.
 ```
 make clean
 ```
+
+This command cleans up the `target` and `dist` folders.

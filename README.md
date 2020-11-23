@@ -3,8 +3,8 @@
 `shit` (**Sh**eets **I**n **T**erminal) is a simple csv / xlsx reader
 you can use from the comforts of your terminal.
 
-> This is still a work in progress. Use it at your own discretion. There
-> will be no official releases until I deem it as ready.
+> This is still a work in progress. There will be no official releases
+> until I deem it as ready. Use it at your own discretion.
 
 ## Screenshot
 
