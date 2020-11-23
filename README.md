@@ -42,7 +42,7 @@ Pronounce `shit` like how you pronounce "sheet".
 ### Do I need `shit`?
 
 Maybe you just prefer reading csv / xlsx files from the terminal. Or
-perhaps like me, your licence for Microsoft Excel expired, and you still
+perhaps like me, your license for Microsoft Excel expired, and you still
 miss it sometimes.
 
 ## Inspirations
