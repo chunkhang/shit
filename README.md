@@ -16,6 +16,17 @@ you can use from the comforts of your terminal.
 
 ## Installation
 
+I have plans of making `shit` available on Homebrew, as well as
+publishing precompiled binaries for easier installation. However, for
+now, please make sure you have `go` on your system before installing
+`shit`.
+
+### Automatic
+
+- The fastest way is to use `go get github.com/chunkhang/shit`
+
+### Manual
+
 - Clone this repository into the right path: `$GOPATH/src/github.com/chunkhang/shit`
 - Build with `go build`
 - Move the built binary `shit` to somewhere like `/usr/local/bin`
@@ -28,7 +39,7 @@ shit [file]
 
 ## FAQ
 
-### How do you pronounce `shit`?
+### How do I pronounce `shit`?
 
 Pronounce `shit` like how you pronounce "sheet".
 
