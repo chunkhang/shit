@@ -60,12 +60,6 @@ func HandleKey() {
 				grid.cursor.MoveLeft()
 			case 'l':
 				grid.cursor.MoveRight()
-			case ' ':
-				if grid.cursor.value == "" {
-					grid.cursor.value = "appwlqpeqwlpe"
-				} else {
-					grid.cursor.value = ""
-				}
 			case 'q':
 				quit()
 			}
