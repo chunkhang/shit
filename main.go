@@ -43,7 +43,10 @@ func main() {
 
 	log.Println("start")
 
-	err = ReadCSV(arg)
+	// err = ReadCSV(arg)
+	// checkErr(err)
+
+	err = ReadExcel(arg)
 	checkErr(err)
 
 	err = StartScreen()
