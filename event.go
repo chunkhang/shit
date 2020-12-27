@@ -20,16 +20,16 @@ func HandleResize() {
 		RefreshScreen()
 
 		// Reposition cursor if it is gone
-		if !grid.cursor.IsVisible() {
-			col := grid.cursor.col
+		if !cursor.IsVisible() {
+			col := cursor.Col
 			if resizeH {
-				col = grid.colOff + grid.colLim - 1
+				col = grid.ColOff + grid.ColLim - 1
 			}
-			row := grid.cursor.row
+			row := cursor.Row
 			if resizeV {
-				row = grid.rowOff + grid.rowLim - 1
+				row = grid.RowOff + grid.RowLim - 1
 			}
-			grid.cursor.MoveTo(row, col)
+			cursor.MoveTo(row, col)
 			RefreshScreen()
 		}
 	}
@@ -41,25 +41,25 @@ func HandleKey() {
 		event := <-channel.key
 		switch event.Key() {
 		case tcell.KeyDown:
-			grid.cursor.MoveDown()
+			cursor.MoveDown()
 		case tcell.KeyUp:
-			grid.cursor.MoveUp()
+			cursor.MoveUp()
 		case tcell.KeyLeft:
-			grid.cursor.MoveLeft()
+			cursor.MoveLeft()
 		case tcell.KeyRight:
-			grid.cursor.MoveRight()
+			cursor.MoveRight()
 		case tcell.KeyCtrlC:
 			quit()
 		case tcell.KeyRune:
 			switch event.Rune() {
 			case 'j':
-				grid.cursor.MoveDown()
+				cursor.MoveDown()
 			case 'k':
-				grid.cursor.MoveUp()
+				cursor.MoveUp()
 			case 'h':
-				grid.cursor.MoveLeft()
+				cursor.MoveLeft()
 			case 'l':
-				grid.cursor.MoveRight()
+				cursor.MoveRight()
 			case 'q':
 				quit()
 			}

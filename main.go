@@ -1,15 +1,23 @@
 package main
 
 import (
+	"errors"
 	"fmt"
-	"log"
 	"os"
 	"strings"
+
+	f "github.com/chunkhang/shit/file"
 )
 
 var (
 	version string
 	mode    = "dev"
+)
+
+var (
+	file  *f.File
+	sheet *f.Sheet
+	grid  *f.Grid
 )
 
 func main() {
@@ -41,13 +49,31 @@ func main() {
 	checkErr(err)
 	defer StopLog()
 
-	log.Println("start")
+	// List of file readers
+	readers := []f.Reader{
+		&f.CSVReader{},
+		&f.XLSXReader{},
+	}
 
-	// err = ReadCSV(arg)
-	// checkErr(err)
-
-	err = ReadExcel(arg)
+	// Try to read with all file readers
+	// Consider failed if no file reader works
+	for _, reader := range readers {
+		file, err = reader.Read(arg)
+		if err == nil {
+			break
+		}
+	}
+	if err != nil {
+		err = errors.New("File cannot be read")
+	}
 	checkErr(err)
+
+	sheet = file.Sheets[0]
+	grid = sheet.Grid
+
+	// Set first cell as cursor
+	cell := grid.GetCell(0, 0)
+	cursor = &Cursor{cell}
 
 	err = StartScreen()
 	checkErr(err)

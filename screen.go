@@ -54,9 +54,9 @@ const (
 )
 
 func drawHeader() {
-	text := fmt.Sprintf("%s%s", ColLabel(grid.cursor.col), RowLabel(grid.cursor.row))
+	text := fmt.Sprintf("%s%s", ColLabel(cursor.Col), RowLabel(cursor.Row))
 	canvas.NewBox(0, 0, term.w, headerHeight).
-		Text(fmt.Sprintf("%s %s", text, grid.cursor.value)).
+		Text(fmt.Sprintf("%s %s", text, cursor.Value)).
 		Draw()
 }
 
@@ -67,25 +67,25 @@ func drawBody() {
 	xStart := 0
 	xEnd := term.w
 
-	rowStart := grid.rowOff
+	rowStart := grid.RowOff
 	rowLim := yEnd - yStart - (2 * cellHeight)
-	rowEnd := Min(rowStart+rowLim, grid.rowTotal)
-	grid.rowLim = rowLim
+	rowEnd := Min(rowStart+rowLim, grid.RowTotal)
+	grid.RowLim = rowLim
 
 	// Row index width is determined by number of digits in the largest row number
 	// Add 2 to this number for padding
 	rowIndexWidth := len(strconv.Itoa(rowEnd)) + 2
-	colStart := grid.colOff
+	colStart := grid.ColOff
 	colLim := (xEnd - xStart - rowIndexWidth) / cellWidth
-	colEnd := Min(colStart+colLim, grid.colTotal)
-	grid.colLim = colLim
+	colEnd := Min(colStart+colLim, grid.ColTotal)
+	grid.ColLim = colLim
 
 	// Column index
 	for col := colStart; col < colEnd; col++ {
 		x := xStart + lineWidth + (col-colStart)*cellWidth + rowIndexWidth
 		y := yStart
 		canvas.NewBox(x, y, cellWidth, cellHeight).
-			Reverse(col == grid.cursor.col).
+			Reverse(col == cursor.Col).
 			Text(ColLabel(col)).
 			AlignCenter().
 			Draw()
@@ -106,7 +106,7 @@ func drawBody() {
 		x := xStart
 		y := yStart + (row-rowStart+1)*cellHeight + lineHeight
 		canvas.NewBox(x, y, rowIndexWidth, cellHeight).
-			Reverse(row == grid.cursor.row).
+			Reverse(row == cursor.Row).
 			Text(RowLabel(row)).
 			AlignRight().
 			Pad(1).
@@ -135,8 +135,8 @@ func drawBody() {
 			x := xStart + lineWidth + (col-colStart)*cellWidth + rowIndexWidth
 			y := yStart + lineHeight + (row-rowStart+1)*cellHeight
 			canvas.NewBox(x, y, cellWidth, cellHeight).
-				Reverse(row == grid.cursor.row && col == grid.cursor.col).
-				Text(cell.value).
+				Reverse(row == cursor.Row && col == cursor.Col).
+				Text(cell.Value).
 				PadRight(1).
 				Draw()
 		}
@@ -144,11 +144,7 @@ func drawBody() {
 }
 
 func drawFooter() {
-	filename := "[No Name]"
-	if inFile != nil {
-		filename = inFile.Name()
-	}
 	canvas.NewBox(0, term.h-footerHeight, term.w, footerHeight).
-		Text(filename).
+		Text(file.Name).
 		Draw()
 }

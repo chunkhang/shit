@@ -1,36 +1,42 @@
 package main
 
+import (
+	f "github.com/chunkhang/shit/file"
+)
+
 // Cursor is the cell the cursor is on
 type Cursor struct {
-	*Cell
+	*f.Cell
 }
+
+var cursor *Cursor
 
 // IsVisible checks whether the cursor is visible on screen
 // After resizing the terminal, the cursor may not be visible
 func (c *Cursor) IsVisible() bool {
-	rowOK := c.row >= grid.rowOff && c.row < grid.rowOff+grid.rowLim
-	colOK := c.col >= grid.colOff && c.col < grid.colOff+grid.colLim
+	rowOK := c.Row >= grid.RowOff && c.Row < grid.RowOff+grid.RowLim
+	colOK := c.Col >= grid.ColOff && c.Col < grid.ColOff+grid.ColLim
 	return rowOK && colOK
 }
 
 // MoveDown moves the grid cursor down
 func (c *Cursor) MoveDown() {
-	c.MoveTo(c.row+1, c.col)
+	c.MoveTo(c.Row+1, c.Col)
 }
 
 // MoveUp moves the grid cursor up
 func (c *Cursor) MoveUp() {
-	c.MoveTo(c.row-1, c.col)
+	c.MoveTo(c.Row-1, c.Col)
 }
 
 // MoveLeft moves the grid cursor left
 func (c *Cursor) MoveLeft() {
-	c.MoveTo(c.row, c.col-1)
+	c.MoveTo(c.Row, c.Col-1)
 }
 
 // MoveRight moves the grid cursor right
 func (c *Cursor) MoveRight() {
-	c.MoveTo(c.row, c.col+1)
+	c.MoveTo(c.Row, c.Col+1)
 }
 
 const (
@@ -43,24 +49,24 @@ func (c *Cursor) MoveTo(row, col int) {
 	if row < 0 || col < 0 {
 		return
 	}
-	if row >= grid.rowTotal || col >= grid.colTotal {
+	if row >= grid.RowTotal || col >= grid.ColTotal {
 		return
 	}
 
 	// Update cursor
-	grid.cursor = &Cursor{grid.GetCell(row, col)}
+	cursor = &Cursor{grid.GetCell(row, col)}
 
 	// Update pagination
-	if row < grid.rowOff+scrollOff {
-		grid.rowOff = Max(grid.rowOff-1, 0)
+	if row < grid.RowOff+scrollOff {
+		grid.RowOff = Max(grid.RowOff-1, 0)
 	}
-	if row >= grid.rowOff+grid.rowLim-scrollOff {
-		grid.rowOff++
+	if row >= grid.RowOff+grid.RowLim-scrollOff {
+		grid.RowOff++
 	}
-	if col < grid.colOff+scrollOff {
-		grid.colOff = Max(grid.colOff-1, 0)
+	if col < grid.ColOff+scrollOff {
+		grid.ColOff = Max(grid.ColOff-1, 0)
 	}
-	if col >= grid.colOff+grid.colLim-scrollOff {
-		grid.colOff++
+	if col >= grid.ColOff+grid.ColLim-scrollOff {
+		grid.ColOff++
 	}
 }

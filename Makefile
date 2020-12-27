@@ -31,6 +31,6 @@ log:
 # Clean
 
 clean:
-	@$(RM) -r target dist
+	@$(RM) -r $(TARGET) $(DIST) $(LOG)
 
 .PHONY: all build log clean
